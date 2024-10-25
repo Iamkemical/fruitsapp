@@ -7,7 +7,27 @@ const { Sequelize, Op } = require("sequelize");
 
 const env = process.env.NODE_ENV || "development";
 const config = require("./config/config");
-const sequelize = new Sequelize(config[env]);
+
+const sequelize = new Sequelize(process.env.DATABASE_URL, config[env]);
+
+async function testConnection() {
+  try {
+    await sequelize.authenticate();
+    console.log("✅ Database connection has been established successfully.");
+
+    // Test query
+    const result = await sequelize.query("SELECT NOW()", {
+      type: Sequelize.QueryTypes.SELECT,
+    });
+    console.log("📊 Test query result:", result);
+  } catch (error) {
+    console.error("❌ Unable to connect to the database:", error);
+  } finally {
+    //await sequelize.close();
+  }
+}
+
+testConnection();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
