@@ -36,13 +36,13 @@ jobs:
         env: 
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         working-directory: .
-        run: npx sequelize-cli db:migrate --debug
+        run: npx sequelize-cli db:migrate --debug 
 
       - name: Seed to Database
         env: 
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         working-directory: .
-        run: npx sequelize-cli db:seed:all
+        run: npx sequelize-cli db:seed:all --debug
 
       - name: Build Project
         working-directory: .
