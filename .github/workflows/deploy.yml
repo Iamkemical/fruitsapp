@@ -1,0 +1,63 @@
+name: FruitApp Deployment
+
+on: 
+  push:
+    branches:
+      - main
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        working-directory: .
+        run: npm install
+
+      - name: Debug Database Url
+        env: 
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          echo "URL Structure Check (sanitized):"
+          echo $DATABASE_URL | sed 's/:[^:@/:*****@/'
+          echo "Protocol Check:"
+          echo $DATABASE_URL | cut -d: -fl
+
+      - name: Run Migrations
+        env: 
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        working-directory: .
+        run: npx sequelize-cli db:migrate
+
+      - name: Seed to Database
+        env: 
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        working-directory: .
+        run: npx sequelize-cli db:seed:all
+
+      - name: Build Project
+        working-directory: .
+        run: npm run build
+
+      - name: Deploy to Render
+        uses: givemomentum/render-deploy@main
+        with: 
+          service_id: ${{ secrets.RENDER_SERVICE_ID }}
+          api_key: ${{ secrets.RENDER_API_KEY }}
+          clear-cache: false
+          wait_deploy: false
+          github_deployment: false
+          deployment_environment: 'development'
+
+      - name: Notify deployment success
+        if: success()
+        run: echo "Deployment succeded!"
