@@ -25,7 +25,7 @@ jobs:
 
       - name: Debug Database Url
         env: 
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }} 
         run: |
           echo "URL Structure Check (sanitized):"
           echo $DATABASE_URL | sed 's/:[^:@]*@/:*****@/'
