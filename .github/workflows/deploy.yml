@@ -30,7 +30,7 @@ jobs:
           echo "URL Structure Check (sanitized):"
           echo $DATABASE_URL | sed 's/:[^:@]*@/:*****@/'
           echo "Protocol Check:"
-          echo $DATABASE_URL | cut -d: -fl
+          echo $DATABASE_URL | cut -d: -f1
 
       - name: Run Migrations
         env: 
