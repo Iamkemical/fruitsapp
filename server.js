@@ -40,6 +40,14 @@ app.get("/", (req, res) => {
   });
 });
 
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "Success",
+    message: `API up and running`,
+    data: null,
+  });
+});
+
 app.get("/api/fruit", async (req, res) => {
   const { name, color, season, createdAt } = req.query;
 
