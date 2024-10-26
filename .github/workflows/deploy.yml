@@ -28,7 +28,7 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
           echo "URL Structure Check (sanitized):"
-          echo $DATABASE_URL | sed 's/:[^:@/:*****@/'
+          echo $DATABASE_URL | sed 's/:[^:@]*@/:*****@/'
           echo "Protocol Check:"
           echo $DATABASE_URL | cut -d: -fl
 
